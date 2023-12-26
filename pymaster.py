@@ -19,7 +19,10 @@ MAX_SERVERS_FOR_IP = 14
 class PyMaster:
     def __init__(self, ip, port):
         self.serverList = []
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        if ':' in ip:
+            self.sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+        else:
+            self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.bind((ip, port))
 
         logging.debug("Welcome to PyMaster!")
