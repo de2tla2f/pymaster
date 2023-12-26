@@ -145,14 +145,14 @@ class PyMaster:
             _send_fake_info(self.sock, string, gamedir, addr)
 
 
-    def remove_server_from_list(self, addr):
+    def remove_server_from_list(self, data, addr):
         for server in self.serverList:
             if server.addr == addr:
                 logging.debug("Remove Server: from {0}:{1}".format(addr[0], addr[1]))
                 self.serverList.remove(server)
 
 
-    def send_challenge_to_server(self, addr):
+    def send_challenge_to_server(self, data, addr):
         logging.debug("Challenge Request: from {0}:{1}".format(addr[0], addr[1]))
         # At first, remove old server- data from list
         # self.removeServerFromList(None, addr)
