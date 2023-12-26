@@ -13,5 +13,5 @@ Master server written in Python. Replacement for HLMaster
 * `git clone https://github.com/YGGverse/pymaster.git`
 * `cd pymaster`
 * `git checkout v2`
-* `ufw allow 27010`
 * `python3 pymaster.py -i :: -p 27010` for `IPv6` or `python3 pymaster.py -i 0.0.0.0 -p 27010` for `IPv4`
+* `ufw allow 27010`
