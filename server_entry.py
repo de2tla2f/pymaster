@@ -1,6 +1,8 @@
 from time import time
 from struct import pack
 
+import ipaddress
+
 class ServerEntry:
 	challenge2 = 0
 	gamedir = ''
