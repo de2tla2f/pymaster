@@ -1,11 +1,12 @@
 class MasterProtocol:
+
 	# Client To Master
-	clientQuery = b'1'
+	clientQuery = '1'
 
 	# Server To Master
-	challengeRequest = b'q\xFF'
-	addServer = b'0\n'
-	removeServer = b'\x62\x0A'
+	challengeRequest = 'q'
+	addServer = '0'
+	removeServer = 'b'
 
 	# Master To Client
 	queryPacketHeader = b'\xff\xff\xff\xff\x66\x0a'
