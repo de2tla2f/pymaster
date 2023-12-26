@@ -67,20 +67,23 @@ class PyMaster:
         gamedir = "valve"  # halflife, by default
         clver = None
         nat = 0
+        key = None
 
         for i in range(0, len(split), 2):
             try:
-                key = split[i + 1]
+                value = split[i + 1]
                 if split[i] == "gamedir":
-                    gamedir = key.lower()  # keep gamedir in lowercase
+                    gamedir = value.lower()  # keep gamedir in lowercase
                 elif split[i] == "nat":
-                    nat = int(key)
+                    nat = int(value)
                 elif split[i] == "clver":
-                    clver = key
+                    clver = value
+                elif split[i] == 'key':
+                    key = int(value, 16)
                 else:
                     logging.debug(
                         "Unhandled info string entry: {0}/{1}. Infostring was: {2}".format(
-                            split[i], key, split
+                            split[i], value, split
                         )
                     )
             except IndexError:
@@ -91,6 +94,10 @@ class PyMaster:
             return
 
         packet = MasterProtocol.queryPacketHeader
+
+        if key != None: # Required in latest Xash3D version
+            packet += b'\x7F' + pack('<I', key) + b'\x00'
+
         for i in self.serverList:
             if time() > i.die:
                 self.serverList.remove(i)
