@@ -5,7 +5,7 @@ Master server written in Python. Replacement for HLMaster
 ## Features
 
 * Added IPv6 support
-* Includes latest Xash3D protocol updates
+* Includes latest Xash3D protocol updates (thanks to [@a1batross](https://github.com/a1batross))
 * Clean `pymaster.py` codebase by [@xdettlaff](https://github.com/xdettlaff/pymaster)
 
 ## Install
