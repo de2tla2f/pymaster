@@ -172,7 +172,6 @@ class PyMaster:
         for i in self.serverList:
             if i.addr[0] == addr[0]:
                 if i.addr[1] == addr[1]:
-                    logging.debug("Removed server {0}:{1} with same port as {0}:{1}".format(i.addr[0], i.addr[1], addr[0], addr[1]))
                     self.serverList.remove(i)
                 else:
                     count += 1
