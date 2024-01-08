@@ -100,16 +100,20 @@ class PyMaster:
 
         for i in self.serverList:
             if time() > i.die:
+                logging.debug("Server removed by timeout")
                 self.serverList.remove(i)
                 continue
 
             if not i.check:
+                logging.debug("Invalid request")
                 continue
 
             if nat != i.nat:
+                logging.debug("NAT {0} mismatch {1}".format(i.nat, nat))
                 continue
 
             if gamedir is not None and gamedir != i.gamedir:
+                logging.debug("Game dir {0} mismatch node settings: {1}".format(i.gamedir, gamedir))
                 continue
 
             if nat:
@@ -168,15 +172,18 @@ class PyMaster:
         for i in self.serverList:
             if i.addr[0] == addr[0]:
                 if i.addr[1] == addr[1]:
+                    logging.debug("Removed server {0}:{1} with same port as {0}:{1}".format(i.addr[0], i.addr[1], addr[0], addr[1]))
                     self.serverList.remove(i)
                 else:
                     count += 1
                 if count > MAX_SERVERS_FOR_IP:
+                    logging.debug("Reached MAX_SERVERS_FOR_IP: {0}".format(MAX_SERVERS_FOR_IP))
                     return
 
         challenge = random.randint(0, 2**32 - 1)
 
         # Add server to list
+        logging.debug("Added new server {0}:{1} with challenge {2}".format(addr[0], addr[1], challenge))
         self.serverList.append(ServerEntry(addr, challenge))
 
         # And send him a challenge
@@ -193,6 +200,7 @@ class PyMaster:
         # Find a server with same address
         for serverEntry in self.serverList:
             if serverEntry.addr == addr:
+                logging.debug("Skipped same server address: {0}:{1}".format(addr[0], addr[1]))
                 break
 
         serverEntry.setInfoString(serverInfo)
