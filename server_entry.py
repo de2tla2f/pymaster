@@ -61,7 +61,7 @@ class ServerEntry:
 				elif( split[i] == 'nat' ):
 					self.nat = int(value)
 				elif split[i] == 'key':
-					self.nat = int(value, 16)
+					self.key = int(value, 16)
 			except IndexError:
 				pass
 		self.check = self.challenge == self.challenge2
