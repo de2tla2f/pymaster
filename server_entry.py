@@ -5,7 +5,7 @@ import ipaddress
 
 class ServerEntry:
 	challenge2 = 0
-	gamedir = ''
+	gamedir = 'valve'
 	protocol = 0
 	players = 0
 	maxplayers = 0
@@ -20,45 +20,48 @@ class ServerEntry:
 	region = 255
 	product = ''
 	nat = 0
+	key = None
 
 	def setInfoString(self, data):
 		infostring = data.replace('\n', '').replace('\r', '').replace('\0', '')
 		split = infostring.split('\\')
 		for i in range(0, len(split), 2):
 			try:
-				key = split[i + 1]
+				value = split[i + 1]
 				if( split[i] == 'challenge' ):
-					self.challenge2 = int(key)
+					self.challenge2 = int(value)
 				elif( split[i] == 'gamedir' ):
-					self.gamedir = key.lower() # keep gamedir lowercase
+					self.gamedir = value.lower() # keep gamedir lowercase
 				elif( split[i] == 'protocol' ):
-					self.protocol = int(key)
+					self.protocol = int(value)
 				elif( split[i] == 'players' ):
-					self.players = int(key)
+					self.players = int(value)
 				elif( split[i] == 'max' ):
-					self.maxplayers = int(key.split('.')[0])
+					self.maxplayers = int(value.split('.')[0])
 				elif( split[i] == 'bots' ):
-					self.bots = int(key)
+					self.bots = int(value)
 				elif( split[i] == 'map' ):
-					self.gamemap = key
+					self.gamemap = value
 				elif( split[i] == 'version' ):
-					self.version = key
+					self.version = value
 				elif( split[i] == 'type' ):
-					self.servtype = key
+					self.servtype = value
 				elif( split[i] == 'password' ):
-					self.password = key
+					self.password = value
 				elif( split[i] == 'os' ):
-					self.os = key
+					self.os = value
 				elif( split[i] == 'secure' ):
-					self.secure = key
+					self.secure = value
 				elif( split[i] == 'lan' ):
-					self.lan = key
+					self.lan = value
 				elif( split[i] == 'region' ):
-					self.region = key
+					self.region = value
 				elif( split[i] == 'product' ):
-					self.product = key
+					self.product = value
 				elif( split[i] == 'nat' ):
-					self.nat = int(key)
+					self.nat = int(value)
+				elif split[i] == 'key':
+					self.nat = int(value, 16)
 			except IndexError:
 				pass
 		self.check = self.challenge == self.challenge2
