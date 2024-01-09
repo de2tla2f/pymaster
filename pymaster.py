@@ -120,9 +120,6 @@ class PyMaster:
                     logging.debug("Reached MAX_SERVERS_FOR_IP: {0}".format(MAX_SERVERS_FOR_IP))
                     return
 
-        # Add server
-        logging.debug("Add Server: {0}:{1}".format(addr[0], addr[1]))
-
         challenge = random.randint(0, 2**32 - 1)
 
         # Add server to list
