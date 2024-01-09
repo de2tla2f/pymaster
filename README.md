@@ -2,6 +2,10 @@
 
 Master server written in Python. Replacement for HLMaster
 
+This project tested on latest [Xash3D FWGS](https://github.com/FWGS/xash3d-fwgs) engine.
+
+If your client version does not return `IPv6` nodes, please checkout [this update](https://github.com/YGGverse/xash3d-fwgs/commit/afec7161842e928a5627d724e4fd7445fb7c3ee6).
+
 ## Features
 
 * Added IPv6 support
