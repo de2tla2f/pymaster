@@ -95,6 +95,7 @@ class PyMaster:
             # Cleanup servers by timeout
             if time() > i.die:
                 self.serverList.remove(i)
+                logging.debug("Server removed by timeout: {0}:{1}".format(addr[0], addr[1]))
                 continue
 
             # Use pregenerated address string
@@ -106,7 +107,7 @@ class PyMaster:
 
     def send_challenge_to_server(self, data, addr):
 
-        logging.debug("Challenge Request: {0}:{1}".format(addr[0], addr[1]))
+        logging.debug("Challenge request: {0}:{1}".format(addr[0], addr[1]))
 
         # At first, remove old server- data from list
         count = 0
