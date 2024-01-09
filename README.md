@@ -24,4 +24,4 @@ If your client version does not return `IPv6` nodes, please checkout [this updat
 
 ### Yggdrasil
 
-* `[201:5eb5:f061:678e:7565:6338:c02c:5251]:27010`
+* `[201:5eb5:f061:678e:7565:6338:c02c:5251]:27010` | `hl.ygg:27010` | `hl.ygg.at:27010`
