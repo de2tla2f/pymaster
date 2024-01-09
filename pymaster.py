@@ -39,10 +39,6 @@ class PyMaster:
                 self.client_query(data, addr)
             case MasterProtocol.challengeRequest:
                 self.send_challenge_to_server(data, addr)
-            case MasterProtocol.addServer:
-                self.add_server_to_list(data, addr)
-            case MasterProtocol.removeServer:
-                self.remove_server_from_list(data, addr)
             case other:
                 logging.debug("Unknown message: {0} from {1}:{2}".format(data, addr[0], addr[1]))
 
@@ -89,85 +85,25 @@ class PyMaster:
             except IndexError:
                 pass
 
-        if clver is None:  # Probably an old vulnerable version
-            self.fake_info_for_old_versions(gamedir, addr)
-            return
-
         packet = MasterProtocol.queryPacketHeader
 
         if key != None: # Required in latest Xash3D version
             packet += b'\x7F' + pack('<I', key) + b'\x00'
 
         for i in self.serverList:
-            if time() > i.die:
-                logging.debug("Server removed by timeout")
-                self.serverList.remove(i)
-                continue
-
-            if not i.check:
-                logging.debug("Invalid request")
-                continue
-
-            if nat != i.nat:
-                logging.debug("NAT {0} mismatch {1}".format(i.nat, nat))
-                continue
-
-            if gamedir is not None and gamedir != i.gamedir:
-                logging.debug("Game dir {0} mismatch node settings: {1}".format(i.gamedir, gamedir))
-                continue
-
-            if nat:
-                reply = "\xff\xff\xff\xffc {0}:{1}".format(addr[0], addr[1])
-                data = reply.encode("latin_1")
-                # Tell server to send info reply
-                self.sock.sendto(data, i.addr)
 
             # Use pregenerated address string
             packet += i.queryAddr
 
         packet += b"\0\0\0\0\0\0"  # Fill last IP:Port with \0
+
         self.sock.sendto(packet, addr)
 
-
-    def _send_fake_info(sock, warnmsg, gamedir, addr):
-        baseReply = (
-            b"\xff\xff\xff\xffinfo\n\host\\"
-            + warnmsg.encode("utf-8")
-            + b"\map\\update\dm\\0\\team\\0\coop\\0\\numcl\\32\maxcl\\32\\gamedir\\"
-            + gamedir.encode("latin-1")
-            + b"\\"
-        )
-        sock.sendto(baseReply, addr)
-
-
-    def fake_info_for_old_versions(self, gamedir, addr):
-        error_message = [
-            "This version is not",
-            "supported anymore",
-            "Please update Xash3DFWGS",
-            "From GooglePlay or GitHub",
-            "Эта версия",
-            "устарела",
-            "Обновите Xash3DFWGS c",
-            "GooglePlay или GitHub",
-        ]
-
-        for string in error_message:
-            _send_fake_info(self.sock, string, gamedir, addr)
-
-
-    def remove_server_from_list(self, data, addr):
-        for server in self.serverList:
-            if server.addr == addr:
-                logging.debug("Remove Server: from {0}:{1}".format(addr[0], addr[1]))
-                self.serverList.remove(server)
-
-
     def send_challenge_to_server(self, data, addr):
-        logging.debug("Challenge Request: from {0}:{1}".format(addr[0], addr[1]))
-        # At first, remove old server- data from list
-        # self.removeServerFromList(None, addr)
 
+        logging.debug("Challenge Request: {0}:{1}".format(addr[0], addr[1]))
+
+        # At first, remove old server- data from list
         count = 0
         for i in self.serverList:
             if i.addr[0] == addr[0]:
@@ -179,31 +115,18 @@ class PyMaster:
                     logging.debug("Reached MAX_SERVERS_FOR_IP: {0}".format(MAX_SERVERS_FOR_IP))
                     return
 
+        # Add server
+        logging.debug("Add Server: {0}:{1}".format(addr[0], addr[1]))
+
         challenge = random.randint(0, 2**32 - 1)
 
         # Add server to list
-        logging.debug("Added new server {0}:{1} with challenge {2}".format(addr[0], addr[1], challenge))
         self.serverList.append(ServerEntry(addr, challenge))
 
         # And send him a challenge
         packet = MasterProtocol.challengePacketHeader
         packet += pack("I", challenge)
         self.sock.sendto(packet, addr)
-
-
-    def add_server_to_list(self, data, addr):
-        logging.debug("Add Server: from {0}:{1}".format(addr[0], addr[1]))
-        # Remove the header. Just for better parsing.
-        serverInfo = data.strip("\x30\x0a\x5c")
-
-        # Find a server with same address
-        for serverEntry in self.serverList:
-            if serverEntry.addr == addr:
-                logging.debug("Skipped same server address: {0}:{1}".format(addr[0], addr[1]))
-                break
-
-        serverEntry.setInfoString(serverInfo)
-
 
 def spawn_pymaster(verbose, ip, port):
     if verbose:
