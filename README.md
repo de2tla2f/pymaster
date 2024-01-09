@@ -20,4 +20,4 @@ Master server written in Python. Replacement for HLMaster
 
 ### Yggdrasil
 
-* `[201:23b4:991a:634d:8359:4521:5576:15b7]:27010`
+* `[201:5eb5:f061:678e:7565:6338:c02c:5251]:27010`
