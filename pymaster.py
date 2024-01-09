@@ -92,6 +92,11 @@ class PyMaster:
 
         for i in self.serverList:
 
+            # Cleanup servers by timeout
+            if time() > i.die:
+                self.serverList.remove(i)
+                continue
+
             # Use pregenerated address string
             packet += i.queryAddr
 
